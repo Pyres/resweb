@@ -14,7 +14,7 @@ setup(
     include_package_data=True,
     package_data={'resweb': ['templates/*.mustache','media/*']},
     install_requires=[
-        'pyres',
+        'pyres>=1.3',
         'flask',
         'pystache'
     ],
