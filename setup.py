@@ -8,7 +8,7 @@ setup(
     author_email='mgeorge@gmail.com',
     maintainer='Matt George',
     license='MIT',
-    url='http://github.com/pyres/resweb',
+    url='http://github.com/Pyres/resweb',
     packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
     download_url='http://pypi.python.org/packages/source/p/resweb/resweb-%s.tar.gz' % version,
     include_package_data=True,
@@ -18,6 +18,10 @@ setup(
         'flask',
         'pystache'
     ],
+    entry_points = """\
+    [console_scripts]
+    resweb=resweb.core:main
+    """,
     classifiers = [
             'Development Status :: 4 - Beta',
             'Environment :: Console',

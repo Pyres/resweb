@@ -114,5 +114,8 @@ def delayed_timestamp(timestamp):
     start = request.args.get('start',0)
     start = int(start)
     return DelayedTimestamp(g.pyres, timestamp, start).render().encode('utf-8')
+
+def main():
+    app.run()
 if __name__ == "__main__":
-    app.run(debug=True)
+    main()

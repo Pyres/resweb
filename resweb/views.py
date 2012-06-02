@@ -1,6 +1,7 @@
 import pystache
 
 from pyres import __version__
+from resweb import __version__ as res_version
 from pyres.worker import Worker as Wrkr
 from pyres import failure
 import os
@@ -28,6 +29,9 @@ class ResWeb(pystache.TemplateSpec):
 
     def version(self):
         return str(__version__)
+
+    def resweb_version(self):
+        return str(res_version)
 
     def pages(self, start, size, link_function, width=20):
         pages = []
