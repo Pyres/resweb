@@ -1,1 +1,1 @@
-recursive-include resweb *.mustache media/*
+recursive-include resweb *.mustache static/*
