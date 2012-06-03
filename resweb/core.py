@@ -58,21 +58,21 @@ def failed_retry():
     job = b64decode(failed_job)
     decoded = ResQ.decode(job)
     failure.retry(g.pyres, decoded['queue'], job)
-    raise redirect('/failed/')
+    return redirect('/failed/')
 
 @app.route('/failed/delete/',methods=["POST"])
 def failed_delete():
     failed_job = request.form['failed_job']
     job = b64decode(failed_job)
     failure.delete(g.pyres, job)
-    raise redirect('/failed/')
+    return redirect('/failed/')
 
 @app.route('/failed/delete_all/')
 def delete_all_failed():
      #move resque:failed to resque:failed-staging
      g.pyres.redis.rename('resque:failed','resque:failed-staging')
      g.pyres.redis.delete('resque:failed-staging')
-     raise redirect('/failed/')
+     return redirect('/failed/')
 
 
 @app.route('/failed/retry_all')
@@ -81,7 +81,7 @@ def retry_failed(number=5000):
     for f in failures:
         j = b64decode(f['redis_value'])
         failure.retry(g.pyres, f['queue'], j)
-    raise redirect('/failed/')
+    return  redirect('/failed/')
 
 @app.route('/workers/<worker_id>/')
 def worker(worker_id):
@@ -93,7 +93,7 @@ def workers():
 
 @app.route('/stats/')
 def stats_resque():
-    raise redirect('/stats/resque/')
+    return redirect('/stats/resque/')
 
 @app.route('/stats/<key>/')
 def stats(key):
