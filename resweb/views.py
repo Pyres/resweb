@@ -10,7 +10,7 @@ import datetime
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'templates')
 class ResWeb(pystache.TemplateSpec):
     template_path = TEMPLATE_PATH
-    renderer = pystache.Renderer(search_dirs = template_path)
+    renderer = pystache.Renderer(search_dirs=template_path)
 
     def __init__(self, host):
         self.resq = host
@@ -25,7 +25,7 @@ class ResWeb(pystache.TemplateSpec):
         self.resq.close()
 
     def address(self):
-        return '%s:%s' % (self.resq.host,self.resq.port)
+        return '%s:%s' % (self.resq.host, self.resq.port)
 
     def version(self):
         return str(__version__)
@@ -45,11 +45,11 @@ class ResWeb(pystache.TemplateSpec):
 
         for i in range(num_pages):
             current = True
-            if start == i*width:
+            if start == i * width:
                 current = False
-            link = link_function(i*width)
-            link_name = str(i+1)
-            pages.append(dict(link=link,link_name=link_name,current=current))
+            link = link_function(i * width)
+            link_name = str(i + 1)
+            pages.append(dict(link=link, link_name=link_name, current=current))
         return pages
 
 class Overview(ResWeb):
@@ -81,10 +81,10 @@ class Overview(ResWeb):
 
     def jobs(self):
         jobs = []
-        for job in self.resq.peek(self._queue, self._start, self._start+20):
+        for job in self.resq.peek(self._queue, self._start, self._start + 20):
             jobs.append({
-                'class':job['class'],
-                'args':','.join(job['args'])
+                'class': job['class'],
+                'args': ','.join(job['args'])
             })
         return jobs
 
@@ -102,12 +102,12 @@ class Overview(ResWeb):
         workers = []
         for w in self.resq.working():
             data = w.processing()
-            host,pid,queues = str(w).split(':')
+            host, pid, queues = str(w).split(':')
             item = {
-                'state':w.state(),
+                'state': w.state(),
                 'host': host,
-                'pid':pid,
-                'w':str(w)
+                'pid': pid,
+                'w': str(w)
             }
             item['queue'] = w.job().get('queue')
             if 'queue' in data:
@@ -119,6 +119,7 @@ class Overview(ResWeb):
             item['nodata'] = not item['data']
             workers.append(item)
         return workers
+
     def worker_size(self):
         return str(len(self.workers()))
 
@@ -148,17 +149,17 @@ class Workers(ResWeb):
         workers = []
         for w in self.all():
             data = w.processing()
-            host,pid,queues = str(w).split(':')
+            host, pid, queues = str(w).split(':')
             item = {
-                'state':w.state(),
+                'state': w.state(),
                 'host': host,
-                'pid':pid,
-                'w':str(w)
+                'pid': pid,
+                'w': str(w)
             }
             qs = []
             for q in queues.split(','):
                 qs.append({
-                    'q':str(q)
+                    'q': str(q)
                 })
             item['queues'] = qs
             if 'queue' in data:
@@ -194,9 +195,9 @@ class Queue(ResWeb):
 
     def jobs(self):
         jobs = []
-        for job in self.resq.peek(self.key, self._start, self._start+20):
+        for job in self.resq.peek(self.key, self._start, self._start + 20):
             jobs.append({
-                'class':job['class'],
+                'class': job['class'],
                 'args': str(job['args'])
             })
         return jobs
@@ -255,16 +256,16 @@ class Stats(ResWeb):
     def sub_nav(self):
         sub_nav = []
         sub_nav.append({
-            'section':'stats',
-            'subtab':'resque'
+            'section': 'stats',
+            'subtab': 'resque'
         })
         sub_nav.append({
-            'section':'stats',
-            'subtab':'redis'
+            'section': 'stats',
+            'subtab': 'redis'
         })
         sub_nav.append({
-            'section':'stats',
-            'subtab':'keys'
+            'section': 'stats',
+            'subtab': 'keys'
         })
         return sub_nav
 
@@ -272,7 +273,7 @@ class Stats(ResWeb):
         if self.key_id == 'resque':
             return 'Pyres'
         elif self.key_id == 'redis':
-            return '%s:%s' % (self.resq.host,self.resq.port)
+            return '%s:%s' % (self.resq.host, self.resq.port)
         elif self.key_id == 'keys':
             return 'Keys owned by Pyres'
         else:
@@ -292,7 +293,7 @@ class Stats(ResWeb):
         stats = []
         for key, value in self.resq.info().items():
             stats.append({
-                'key':str(key),
+                'key': str(key),
                 'value': str(value)
             })
         return stats
@@ -301,20 +302,22 @@ class Stats(ResWeb):
         stats = []
         for key, value in self.resq.redis.info().items():
             stats.append({
-                'key':str(key),
+                'key': str(key),
                 'value': str(value)
             })
         return stats
+
     def key_info(self):
         stats = []
         for key in self.resq.keys():
 
             stats.append({
                 'key': str(key),
-                'type': str(self.resq.redis.type('resque:'+key)),
+                'type': str(self.resq.redis.type('resque:' + key)),
                 'size': str(redis_size(key, self.resq))
             })
         return stats
+
     def standard(self):
         return not self.resque_keys()
 
@@ -332,30 +335,30 @@ class Stat(ResWeb):
         return str(self.stat_id)
 
     def key_type(self):
-        return str(self.resq.redis.type('resque:'+ str(self.stat_id)))
+        return str(self.resq.redis.type('resque:' + str(self.stat_id)))
 
     def items(self):
         items = []
         if self.key_type() == 'list':
-            lst = self.resq.redis.lrange('resque:'+self.stat_id,0,20) or []
+            lst = self.resq.redis.lrange('resque:' + self.stat_id, 0, 20) or []
             for k in lst:
                 items.append({
-                    'row':str(k)
+                    'row': str(k)
                 })
         elif self.key_type() == 'set':
-            st = self.resq.redis.smembers('resque:'+self.stat_id) or set([])
+            st = self.resq.redis.smembers('resque:' + self.stat_id) or set([])
             for k in st:
                 items.append({
-                    'row':str(k)
+                    'row': str(k)
                 })
         elif self.key_type() == 'string':
             items.append({
-                'row':str(self.resq.redis.get('resque:'+self.stat_id))
+                'row': str(self.resq.redis.get('resque:' + self.stat_id))
             })
         return items
 
     def size(self):
-        return redis_size(self.stat_id,self.resq)
+        return redis_size(self.stat_id, self.resq)
 
 class Worker(ResWeb):
     def __init__(self, host, worker_id):
@@ -367,10 +370,11 @@ class Worker(ResWeb):
         return str(self.worker_id)
 
     def host(self):
-        host,pid,queues = str(self.worker_id).split(':')
+        host, pid, queues = str(self.worker_id).split(':')
         return str(host)
+
     def pid(self):
-        host,pid,queues = str(self.worker_id).split(':')
+        host, pid, queues = str(self.worker_id).split(':')
         return str(pid)
 
     def state(self):
@@ -380,11 +384,11 @@ class Worker(ResWeb):
         return str(self._worker.started)
 
     def queues(self):
-        host,pid,queues = str(self.worker_id).split(':')
+        host, pid, queues = str(self.worker_id).split(':')
         qs = []
         for q in queues.split(','):
             qs.append({
-                'q':str(q)
+                'q': str(q)
             })
         return qs
 
@@ -510,12 +514,12 @@ class DelayedTimestamp(ResWeb):
         return '/delayed/?start=%s' % start
 
 def redis_size(key, resq):
-    key_type = resq.redis.type('resque:'+key)
+    key_type = resq.redis.type('resque:' + key)
     item = 0
     if key_type == 'list':
-        item = resq.redis.llen('resque:'+key)
+        item = resq.redis.llen('resque:' + key)
     elif key_type == 'set':
-        item = resq.redis.scard('resque:'+key)
+        item = resq.redis.scard('resque:' + key)
     elif key_type == 'string':
         item = 1
     return str(item)
