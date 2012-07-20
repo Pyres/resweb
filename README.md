@@ -14,6 +14,12 @@ By default resweb will try to connect to redis on localhost. However, if you'd l
 
 	RESWEB_HOST = "10.0.0.1:5367"
 	RESWEB_PASSWORD = 'somepass'
+
+If you would like to run the server on something other than 127.0.0.1:500, please set the following variables in the configuration file:
+
+    SERVER_HOST = "0.0.0.0"
+    SERVER_PORT = 8080
+
 ##Running
 After installing, just run the following from the command line:
 
