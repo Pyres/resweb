@@ -17,7 +17,7 @@ from resweb.views import (
 from base64 import b64decode
 app = Flask(__name__)
 app.config.from_object('resweb.default_settings')
-app.config.from_envvar('RESWEB_SETTINGS',silent=True)
+app.config.from_envvar('RESWEB_SETTINGS', silent=True)
 @app.before_request
 def before_request():
     """Make sure we are connected to the database each request."""
