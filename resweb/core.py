@@ -116,6 +116,6 @@ def delayed_timestamp(timestamp):
     return DelayedTimestamp(g.pyres, timestamp, start).render().encode('utf-8')
 
 def main():
-    app.run()
+    app.run(host=app.config['SERVER_HOST'], port=app.config['SERVER_PORT'])
 if __name__ == "__main__":
     main()

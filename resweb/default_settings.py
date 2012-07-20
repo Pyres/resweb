@@ -1,1 +1,3 @@
-RESWEB_HOST="localhost:6379"
+RESWEB_HOST = "localhost:6379"
+SERVER_HOST = "127.0.0.1"
+SERVER_PORT = "5000"
