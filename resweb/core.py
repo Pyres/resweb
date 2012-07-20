@@ -43,12 +43,12 @@ def queues():
 
 @app.route('/queues/<queue_id>/')
 def queue(queue_id):
-    start = int(request.args.get('start',0))
+    start = int(request.args.get('start', 0))
     return Queue(g.pyres, queue_id, start).render().encode('utf-8')
 
 @app.route('/failed/')
 def failed():
-    start = request.args.get('start',0)
+    start = request.args.get('start', 0)
     start = int(start)
     return Failed(g.pyres, start).render().encode('utf-8')
 
@@ -60,7 +60,7 @@ def failed_retry():
     failure.retry(g.pyres, decoded['queue'], job)
     return redirect('/failed/')
 
-@app.route('/failed/delete/',methods=["POST"])
+@app.route('/failed/delete/', methods=["POST"])
 def failed_delete():
     failed_job = request.form['failed_job']
     job = b64decode(failed_job)
@@ -69,10 +69,10 @@ def failed_delete():
 
 @app.route('/failed/delete_all/')
 def delete_all_failed():
-     #move resque:failed to resque:failed-staging
-     g.pyres.redis.rename('resque:failed','resque:failed-staging')
-     g.pyres.redis.delete('resque:failed-staging')
-     return redirect('/failed/')
+    #move resque:failed to resque:failed-staging
+    g.pyres.redis.rename('resque:failed', 'resque:failed-staging')
+    g.pyres.redis.delete('resque:failed-staging')
+    return redirect('/failed/')
 
 
 @app.route('/failed/retry_all')
@@ -81,7 +81,7 @@ def retry_failed(number=5000):
     for f in failures:
         j = b64decode(f['redis_value'])
         failure.retry(g.pyres, f['queue'], j)
-    return  redirect('/failed/')
+    return redirect('/failed/')
 
 @app.route('/workers/<worker_id>/')
 def worker(worker_id):
@@ -105,13 +105,13 @@ def stat(stat_id):
 
 @app.route('/delayed/')
 def delayed():
-    start = request.args.get('start',0)
+    start = request.args.get('start', 0)
     start = int(start)
     return Delayed(g.pyres, start).render().encode('utf-8')
 
 @app.route('/delayed/<timestamp>/')
 def delayed_timestamp(timestamp):
-    start = request.args.get('start',0)
+    start = request.args.get('start', 0)
     start = int(start)
     return DelayedTimestamp(g.pyres, timestamp, start).render().encode('utf-8')
 
