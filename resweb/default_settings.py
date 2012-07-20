@@ -1,1 +1,1 @@
-PYRES_HOST="localhost:6379"
+RESWEB_HOST="localhost:6379"

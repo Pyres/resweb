@@ -21,7 +21,7 @@ app.config.from_envvar('RESWEB_SETTINGS',silent=True)
 @app.before_request
 def before_request():
     """Make sure we are connected to the database each request."""
-    g.pyres = ResQ(app.config['PYRES_HOST'])
+    g.pyres = ResQ(app.config['RESWEB_HOST'], password=app.config.get('RESWEB_PASSWORD', None))
 
 @app.teardown_request
 def teardown_request(exception):
