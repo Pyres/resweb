@@ -9,8 +9,8 @@ import datetime
 
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'templates')
 class ResWeb(pystache.TemplateSpec):
-    template_path = TEMPLATE_PATH
-    renderer = pystache.Renderer(search_dirs=template_path)
+    _template_path = TEMPLATE_PATH
+    renderer = pystache.Renderer(search_dirs=_template_path)
 
     def __init__(self, host):
         self.resq = host
