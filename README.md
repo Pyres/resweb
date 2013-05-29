@@ -20,9 +20,19 @@ If you would like to run the server on something other than 127.0.0.1:5000, plea
     SERVER_HOST = "0.0.0.0"
     SERVER_PORT = 8080
 
+###Authentication Configuration
+If you would like to enable basic auth, enable the following settings:
+
+	BASIC_AUTH = True
+	AUTH_USERNAME = "someuser"
+	AUTH_PASSWORD = "somepassword"
+	
+Then, use the username and password to login via the authentication popup provided by the browser. Be warned, this is just a stopgap and should not be considered secure.
+
 ##Running
 After installing, just run the following from the command line:
 
 	resweb 
 
 Afterwards vist: http://localhost:5000
+
