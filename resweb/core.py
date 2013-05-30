@@ -104,13 +104,14 @@ def failed_delete():
 @app.route('/failed/delete_all/')
 @requires_auth
 def delete_all_failed():
-    #move resque:failed to resque:failed-staging
-    g.pyres.redis.rename('resque:failed', 'resque:failed-staging')
+    # move resque:failed to resque:failed-staging
+    if g.pyres.redis.exists('resque:failed'): 
+        g.pyres.redis.rename('resque:failed', 'resque:failed-staging')
     g.pyres.redis.delete('resque:failed-staging')
     return redirect('/failed/')
 
 
-@app.route('/failed/retry_all')
+@app.route('/failed/retry_all/')
 @requires_auth
 def retry_failed(number=5000):
     failures = failure.all(g.pyres, 0, number)
