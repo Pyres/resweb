@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import Flask, g, redirect, request, Response
+from flask import Flask, g, redirect, request, Response, render_template
 from pyres import ResQ, failure
 
 from resweb.views import (
@@ -59,7 +59,9 @@ def teardown_request(exception):
 @app.route("/")
 @requires_auth
 def overview():
-    return Overview(g.pyres).render().encode('utf-8')
+    # return Overview(g.pyres).render().encode('utf-8')
+    data = Overview(g.pyres)
+    return render_template('overview.html', data=data)
 
 @app.route("/working/")
 @requires_auth
@@ -159,6 +161,6 @@ def delayed_timestamp(timestamp):
     return DelayedTimestamp(g.pyres, timestamp, start).render().encode('utf-8')
 
 def main():
-    app.run(host=app.config['SERVER_HOST'], port=int(app.config['SERVER_PORT']))
+    app.run(host=app.config['SERVER_HOST'], port=int(app.config['SERVER_PORT']), debug=True)
 if __name__ == "__main__":
     main()
