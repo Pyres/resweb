@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% import 'macros.html' as macros %}
 {% block content %}
-{{ data }}
 {{ macros.queues(data) }}
 {{ macros.workers(data) }}
 {% endblock %}
