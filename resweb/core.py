@@ -60,7 +60,27 @@ def teardown_request(exception):
 @requires_auth
 def overview():
     # return Overview(g.pyres).render().encode('utf-8')
-    data = Overview(g.pyres)
+    view_ov = Overview(g.pyres)
+    queues = view_ov.queues()
+    workers = view_ov.workers()
+    empty_workers = view_ov.empty_workers()
+    fail_count = view_ov.fail_count()
+    worker_size = view_ov.worker_size()
+    total_workers = view_ov.total_workers()
+    version = view_ov.version()
+    resweb_version = view_ov.resweb_version()
+    address = view_ov.address()
+    data = {
+        'queues': queues,
+        'fail_count': fail_count,
+        'workers': workers,
+        'empty_workers': empty_workers,
+        'worker_size': worker_size,
+        'total_workers': total_workers,
+        'version': version,
+        'resweb_version': resweb_version,
+        'address': address
+    }
     return render_template('overview.html', data=data)
 
 @app.route("/working/")
