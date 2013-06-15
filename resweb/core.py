@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import Flask, g, redirect, request, Response, render_template
+from flask import Flask, g, redirect, request, Response, render_template, url_for
 from pyres import ResQ, failure
 
 from resweb.views import (
@@ -59,39 +59,47 @@ def teardown_request(exception):
 @app.route("/")
 @requires_auth
 def overview():
-    # return Overview(g.pyres).render().encode('utf-8')
     view_ov = Overview(g.pyres)
-    queues = view_ov.queues()
-    workers = view_ov.workers()
-    empty_workers = view_ov.empty_workers()
-    fail_count = view_ov.fail_count()
-    worker_size = view_ov.worker_size()
-    total_workers = view_ov.total_workers()
-    version = view_ov.version()
-    resweb_version = view_ov.resweb_version()
-    address = view_ov.address()
     data = {
-        'queues': queues,
-        'fail_count': fail_count,
-        'workers': workers,
-        'empty_workers': empty_workers,
-        'worker_size': worker_size,
-        'total_workers': total_workers,
-        'version': version,
-        'resweb_version': resweb_version,
-        'address': address
+        'queues': view_ov.queues(),
+        'fail_count': view_ov.fail_count(),
+        'workers': view_ov.workers(),
+        'empty_workers': view_ov.empty_workers(),
+        'worker_size': view_ov.worker_size(),
+        'total_workers': view_ov.total_workers(),
+        'version': view_ov.version(),
+        'resweb_version': view_ov.resweb_version(),
+        'address': view_ov.address()
     }
     return render_template('overview.html', data=data)
 
 @app.route("/working/")
 @requires_auth
 def working():
-    return Working(g.pyres).render().encode('utf-8')
+    view_working = Working(g.pyres)
+    data = {
+        'workers': view_working.workers(),
+        'empty_workers': view_working.empty_workers(),
+        'worker_size': view_working.worker_size(),
+        'total_workers': view_working.total_workers(),
+        'version': view_working.version(),
+        'resweb_version': view_working.resweb_version(),
+        'address': view_working.address()
+    }
+    return render_template('working.html', data=data)
 
 @app.route("/queues/")
 @requires_auth
 def queues():
-    return Queues(g.pyres).render().encode('utf-8')
+    view_queues = Queues(g.pyres)
+    data = {
+        'queues': view_queues.queues(),
+        'fail_count': view_queues.fail_count(),
+        'version': view_queues.version(),
+        'resweb_version': view_queues.resweb_version(),
+        'address': view_queues.address()
+    }
+    return render_template('queues.html', data=data)
 
 @app.route('/queues/<queue_id>/')
 @requires_auth
@@ -102,9 +110,15 @@ def queue(queue_id):
 @app.route('/failed/')
 @requires_auth
 def failed():
-    start = request.args.get('start', 0)
-    start = int(start)
-    return Failed(g.pyres, start).render().encode('utf-8')
+    view_failed = Failed(g.pyres)
+    data = {
+        'failed_jobs': view_failed.failed_jobs(),
+        'version': view_failed.version(),
+        'resweb_version': view_failed.resweb_version(),
+        'address': view_failed.address()
+    }
+    
+    return render_template('failed.html', data=data)
 
 @app.route('/failed/retry/', methods=["POST"])
 @requires_auth
@@ -113,7 +127,7 @@ def failed_retry():
     job = b64decode(failed_job)
     decoded = ResQ.decode(job)
     failure.retry(g.pyres, decoded['queue'], job)
-    return redirect('/failed/')
+    return redirect(url_for('failed'))
 
 @app.route('/failed/delete/', methods=["POST"])
 @requires_auth
@@ -139,46 +153,110 @@ def retry_failed(number=5000):
     for f in failures:
         j = b64decode(f['redis_value'])
         failure.retry(g.pyres, f['queue'], j)
-    return redirect('/failed/')
+    return redirect(url_for('failed'))
 
 @app.route('/workers/<worker_id>/')
 @requires_auth
 def worker(worker_id):
-    return Worker(g.pyres, worker_id).render().encode('utf-8')
+    view_worker =  Worker(g.pyres, worker_id)
+    data = {
+        'worker': view_worker.worker(),
+        'host': view_worker.host(),
+        'pid': view_worker.pid(),
+        'state': view_worker.state(),
+        'started_at': view_worker.started_at(),
+        'queues': view_worker.queues(),
+        'processed': view_worker.processed(),
+        'failed': view_worker.failed(),
+        'data': view_worker.data(),
+        'code': view_worker.code(),
+        'runat': view_worker.runat(),
+        'version': view_worker.version(),
+        'resweb_version': view_worker.resweb_version(),
+        'address': view_worker.address()
+    }
+    print data
+    return render_template('worker.html', data=data)
 
 @app.route('/workers/')
 @requires_auth
 def workers():
-    return Workers(g.pyres).render().encode('utf-8')
+    view_workers = Workers(g.pyres)
+    data = {
+        'workers': view_workers.workers(),
+        'size': view_workers.size(),
+        'all': view_workers.all(),
+        'version': view_workers.version(),
+        'resweb_version': view_workers.resweb_version(),
+        'address': view_workers.address()
+    }
+    print data
+    return render_template('workers.html', data=data)
 
 @app.route('/stats/')
 @requires_auth
 def stats_resque():
-    return redirect('/stats/resque/')
+    return redirect(url_for('stats', key='resque'))
 
 @app.route('/stats/<key>/')
 @requires_auth
 def stats(key):
-    return Stats(g.pyres, key).render().encode('utf-8')
+    view_stats =  Stats(g.pyres, key)
+    data = {
+        'key': key,
+        'sub_nav': view_stats.sub_nav(),
+        'title': view_stats.title(),
+        'stats': view_stats.stats(),
+        'version': view_stats.version(),
+        'resweb_version': view_stats.resweb_version(),
+        'address': view_stats.address()
+    }
+    print data
+    return render_template('stats.html', data=data)
 
 @app.route('/stat/<stat_id>/')
 @requires_auth
 def stat(stat_id):
-    return Stat(g.pyres, stat_id).render().encode('utf-8')
+    view_stat =  Stat(g.pyres, stat_id)
+    data = {
+        'stat_id': stat_id,
+        'key': view_stat.key(),
+        'key_type': view_stat.key_type(),
+        'stat_items': view_stat.items(),
+        'size': view_stat.size(),
+        'version': view_stat.version(),
+        'resweb_version': view_stat.resweb_version(),
+        'address': view_stat.address()
+    }
+    print data
+    return render_template('stat.html', data=data)
 
 @app.route('/delayed/')
 @requires_auth
 def delayed():
-    start = request.args.get('start', 0)
-    start = int(start)
-    return Delayed(g.pyres, start).render().encode('utf-8')
+    view_delayed = Delayed(g.pyres)
+    data = {
+        'jobs': view_delayed.jobs(),
+        'version': view_delayed.version(),
+        'resweb_version': view_delayed.resweb_version(),
+        'address': view_delayed.address()
+    }
+    print data
+    return render_template('delayed.html', data=data)
 
 @app.route('/delayed/<timestamp>/')
 @requires_auth
 def delayed_timestamp(timestamp):
-    start = request.args.get('start', 0)
-    start = int(start)
-    return DelayedTimestamp(g.pyres, timestamp, start).render().encode('utf-8')
+    view_dt =  DelayedTimestamp(g.pyres, timestamp)
+    data = {
+        'formated_timestamp': view_dt.formated_timestamp(),
+        'jobs': view_dt.jobs(),
+        'version': view_dt.version(),
+        'resweb_version': view_dt.resweb_version(),
+        'address': view_dt.address()
+    }
+    print data
+    return render_template('delayed_timestamp.html', data=data)
 
 def main():
     app.run(host=app.config['SERVER_HOST'], port=int(app.config['SERVER_PORT']), debug=True)

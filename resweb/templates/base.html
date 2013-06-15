@@ -18,7 +18,11 @@
         <li><a href="{{ url_for('stats', key='resque')}}">Stats</a></li>
     </ul>
   </div>
-
+  <ul class="subnav">
+  {% for item in data.sub_nav %}
+        <li ><a href="/{{ item.section }}/{{ item.subtab }}/"><span>{{ item.subtab }}</span></a></li>
+  {% endfor %}
+  </ul>
 <div id="main">
 {% block content %}
 {% endblock %}
