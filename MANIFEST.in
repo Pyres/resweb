@@ -1,1 +1,1 @@
-recursive-include resweb *.mustache static/*
+recursive-include resweb *.html static/*

@@ -1,5 +1,3 @@
-import pystache
-
 from pyres import __version__
 from resweb import __version__ as res_version
 from pyres.worker import Worker as Wrkr
@@ -8,15 +6,11 @@ import os
 import datetime
 
 TEMPLATE_PATH = os.path.join(os.path.dirname(__file__), 'templates')
-class ResWeb(pystache.TemplateSpec):
+class ResWeb(object):
     _template_path = TEMPLATE_PATH
-    renderer = pystache.Renderer(search_dirs=_template_path)
-
+    
     def __init__(self, host):
         self.resq = host
-
-    def render(self):
-        return self.renderer.render(self)
 
     def media_folder(self):
         return '/static/'
