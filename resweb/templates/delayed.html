@@ -6,6 +6,10 @@
   This list below contains the timestamps for scheduled delayed jobs.
 </p>
 
+<p class="sub">
+  Showing {{ data.start }} to {{ data.end }} of <b>{{ data.size }}</b> timestamps
+</p>
+
 <table>
   <tr>
     <th>Timestamp</th>
@@ -18,4 +22,10 @@
     </tr>
   {% endfor %}
 </table>
+
+{% for page in data.pagination %}
+  <li>
+      {% if not page.current%}<a href="{{ page.link}}">{% endif %}{{ page.link_name }}{% if not page.current %}</a>{% endif %}
+  </li>
+{% endfor %}
 {% endblock %}

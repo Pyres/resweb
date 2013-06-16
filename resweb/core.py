@@ -105,7 +105,19 @@ def queues():
 @requires_auth
 def queue(queue_id):
     start = int(request.args.get('start', 0))
-    return Queue(g.pyres, queue_id, start).render().encode('utf-8')
+    view_queue =  Queue(g.pyres, queue_id, start)
+    data = {
+        'queue': view_queue.queue(),
+        'start': view_queue.start(),
+        'end': view_queue.end(),
+        'size': view_queue.size(),
+        'pagination': view_queue.pagination(),
+        'jobs': view_queue.jobs(),
+        'version': view_queue.version(),
+        'resweb_version': view_queue.resweb_version(),
+        'address': view_queue.address()
+    }
+    return render_template('queue.html', data=data)
 
 @app.route('/failed/')
 @requires_auth
@@ -113,6 +125,10 @@ def failed():
     view_failed = Failed(g.pyres)
     data = {
         'failed_jobs': view_failed.failed_jobs(),
+        'start': view_failed.start(),
+        'end': view_failed.end(),
+        'size': view_failed.size(),
+        'pagination': view_failed.pagination(),
         'version': view_failed.version(),
         'resweb_version': view_failed.resweb_version(),
         'address': view_failed.address()
@@ -237,6 +253,10 @@ def delayed():
     view_delayed = Delayed(g.pyres)
     data = {
         'jobs': view_delayed.jobs(),
+        'start': view_delayed.start(),
+        'end': view_delayed.end(),
+        'size': view_delayed.size(),
+        'pagination': view_delayed.pagination(),
         'version': view_delayed.version(),
         'resweb_version': view_delayed.resweb_version(),
         'address': view_delayed.address()
@@ -251,6 +271,10 @@ def delayed_timestamp(timestamp):
     data = {
         'formated_timestamp': view_dt.formated_timestamp(),
         'jobs': view_dt.jobs(),
+        'start': view_dt.start(),
+        'end': view_dt.end(),
+        'size': view_dt.size(),
+        'pagination': view_dt.pagination(),
         'version': view_dt.version(),
         'resweb_version': view_dt.resweb_version(),
         'address': view_dt.address()
