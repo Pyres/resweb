@@ -1,7 +1,7 @@
 {% macro workers(data={}) -%}
-<h1 class='wi'>{{ data.worker_size }} of {{ data.total_workers }} Workers Working</h1>
-  <p class='intro'>The list below contains all workers which are currently running a job.</p>
-  <table class='workers'>
+<h1 class="wi">{{ data.worker_size }} of {{ data.total_workers }} Workers Working</h1>
+  <p class="intro">The list below contains all workers which are currently running a job.</p>
+  <table class="workers">
     <tr>
       <th>&nbsp;</th>
       <th>Where</th>
@@ -11,17 +11,17 @@
 {% if data.workers %}
 {% for worker in data.workers %}
 <tr>
-        <td class='icon'><img src="/static/{{worker.state}}.png" alt="{{worker.state}}" title="{{state}}"></td>
-        <td class='where'><a href="/workers/{{worker.w}}">{{worker.host}}:{{worker.pid}}</a></td>
-        <td class='queues queue'>
-          <a class="queue-tag" href="/queues/{{worker.queue}}">{{worker.queue}}</a>
+        <td class="icon"><img src="{{ url_for('static', filename=worker.state+'.png') }}" alt="{{ worker.state }}" title="{{ state }}"></td>
+        <td class="where"><a href="{{ url_for('.worker', worker_id=worker.w) }}">{{ worker.host }}:{{ worker.pid }}</a></td>
+        <td class="queues queue"">
+          <a class="queue-tag" href="{{ url_for('.queue', queue_id=worker.queue) }}">{{worker.queue }}</a>
         </td>
-        <td class='process'>
+        <td class="process">
             {% if worker.data %}
                 <code>{{code}}</code>
-                <small><a class="queue time" href="/working/{{worker.w}}">{{worker.runat}}</a></small>
+                <small><a class="queue time" href="{{ url_for('.worker.', worker_id=worker.w) }}">{{ worker.runat }}</a></small>
               {% else %}
-                <span class='waiting'>Waiting for a job...</span>
+                <span class="waiting">Waiting for a job...</span>
               {% endif %}
         </td>
       </tr>
@@ -44,12 +44,12 @@
     </tr>
     {% for queue in data.queues %}
     <tr>
-      <td class="queue"><a class="queue" href="/queues/{{ queue.queue }}">{{ queue.queue }}</a></td>
+      <td class="queue"><a class="queue" href="{{ url_for('.queue', queue_id=queue.queue) }}">{{ queue.queue }}</a></td>
       <td class="size">{{ queue.size }}</td>
     </tr>
     {% endfor %}
     <tr class="failed">
-      <td class="queue failed"><a class="queue" href="/failed/">failed</a></td>
+      <td class="queue failed"><a class="queue" href="{{ url_for('.failed') }}">failed</a></td>
       <td class="size">{{ data.fail_count }}</td>
     </tr>
   </table>

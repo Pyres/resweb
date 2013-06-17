@@ -12,7 +12,7 @@
     {% for stat in data.stats %}
     <tr>
         <th>
-        <a href="/stat/{{ stat.key }}">{{ stat.key }}</a>
+        <a href="{{ url_for('.stat', stat_id=stat.key) }}">{{ stat.key }}</a>
         </th>
         <td>{{ stat.type }}</td>
         <td>{{ stat.size }}</td>

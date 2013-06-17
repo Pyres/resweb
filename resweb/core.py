@@ -56,7 +56,7 @@ def teardown_request(exception):
     if hasattr(g, 'pyres'):
         g.pyres.close()
 
-@app.route("/")
+@app.route('/')
 @requires_auth
 def overview():
     view_ov = Overview(g.pyres)
@@ -73,7 +73,7 @@ def overview():
     }
     return render_template('overview.html', data=data)
 
-@app.route("/working/")
+@app.route('/working/')
 @requires_auth
 def working():
     view_working = Working(g.pyres)
@@ -88,7 +88,7 @@ def working():
     }
     return render_template('working.html', data=data)
 
-@app.route("/queues/")
+@app.route('/queues/')
 @requires_auth
 def queues():
     view_queues = Queues(g.pyres)
@@ -136,22 +136,22 @@ def failed():
     
     return render_template('failed.html', data=data)
 
-@app.route('/failed/retry/', methods=["POST"])
+@app.route('/failed/retry/', methods=['POST'])
 @requires_auth
 def failed_retry():
     failed_job = request.form['failed_job']
     job = b64decode(failed_job)
     decoded = ResQ.decode(job)
     failure.retry(g.pyres, decoded['queue'], job)
-    return redirect(url_for('failed'))
+    return redirect(url_for('.failed'))
 
-@app.route('/failed/delete/', methods=["POST"])
+@app.route('/failed/delete/', methods=['POST'])
 @requires_auth
 def failed_delete():
     failed_job = request.form['failed_job']
     job = b64decode(failed_job)
     failure.delete(g.pyres, job)
-    return redirect('/failed/')
+    return redirect(url_for('.failed'))
 
 @app.route('/failed/delete_all/')
 @requires_auth
@@ -159,17 +159,17 @@ def delete_all_failed():
     #move resque:failed to resque:failed-staging
     g.pyres.redis.rename('resque:failed', 'resque:failed-staging')
     g.pyres.redis.delete('resque:failed-staging')
-    return redirect('/failed/')
+    return redirect(url_for('.failed'))
 
 
-@app.route('/failed/retry_all')
+@app.route('/failed/retry_all/')
 @requires_auth
 def retry_failed(number=5000):
     failures = failure.all(g.pyres, 0, number)
     for f in failures:
         j = b64decode(f['redis_value'])
         failure.retry(g.pyres, f['queue'], j)
-    return redirect(url_for('failed'))
+    return redirect(url_for('.failed'))
 
 @app.route('/workers/<worker_id>/')
 @requires_auth
@@ -212,7 +212,7 @@ def workers():
 @app.route('/stats/')
 @requires_auth
 def stats_resque():
-    return redirect(url_for('stats', key='resque'))
+    return redirect(url_for('.stats', key='resque'))
 
 @app.route('/stats/<key>/')
 @requires_auth
@@ -284,5 +284,5 @@ def delayed_timestamp(timestamp):
 
 def main():
     app.run(host=app.config['SERVER_HOST'], port=int(app.config['SERVER_PORT']), debug=True)
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()

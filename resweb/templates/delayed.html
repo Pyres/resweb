@@ -17,7 +17,7 @@
   </tr>
   {% for job in data.jobs %}
     <tr>
-      <td><a href="/delayed/{{ job.timestamp }}/">{{ job.formated_time }}</a></td>
+      <td><a href="{{ url_for('.delayed', timestamp=job.timestamp) }}/">{{ job.formated_time }}</a></td>
       <td>{{ job.size }}</td>
     </tr>
   {% endfor %}
@@ -25,7 +25,7 @@
 
 {% for page in data.pagination %}
   <li>
-      {% if not page.current%}<a href="{{ page.link}}">{% endif %}{{ page.link_name }}{% if not page.current %}</a>{% endif %}
+      {% if not page.current%}<a href="{{ page.link }}">{% endif %}{{ page.link_name }}{% if not page.current %}</a>{% endif %}
   </li>
 {% endfor %}
 {% endblock %}

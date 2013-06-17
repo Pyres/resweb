@@ -23,7 +23,7 @@
 </table>
 {% for page in data.pagination %}
   <li>
-      {% if not page.current%}<a href="{{ page.link}}">{% endif %}{{ page.link_name }}{% if not page.current %}</a>{% endif %}
+      {% if not page.current%}<a href="{{ page.link }}">{% endif %}{{ page.link_name }}{% if not page.current %}</a>{% endif %}
   </li>
 {% endfor %}
 {% endblock %}

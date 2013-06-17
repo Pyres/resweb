@@ -9,12 +9,12 @@ $(document).ready(function(){
 });
 function retry_all(){
     if(confirm("Are you sure you want to retry all?")){
-        window.location.href = "{{ url_for('retry_failed') }}";
+        window.location.href = "{{ url_for('.retry_failed') }}";
     }
 }
 function delete_all(){
     if(confirm("Are you sure you want to delete all?")){
-        window.location.href = "{{ url_for('delete_all_failed') }}";
+        window.location.href = "{{ url_for('.delete_all_failed') }}";
     }
 
 }
@@ -23,7 +23,7 @@ function delete_all(){
 <p class="sub">Showing {{ data.start }} to {{ data.end }} of <b>{{ data.size }}</b> jobs</p>
 {% for page in data.pagination %}
   <li>
-      {% if not page.current%}<a href="{{ page.link}}">{% endif %}{{ page.link_name }}{% if not page.current %}</a>{% endif %}
+      {% if not page.current%}<a href="{{ page.link }}">{% endif %}{{ page.link_name }}{% if not page.current %}</a>{% endif %}
   </li>
 {% endfor %}
 

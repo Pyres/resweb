@@ -12,9 +12,9 @@
 {% if data.workers %}
 {% for worker in data.workers %}
   <tr class="{{ worker.state }}">
-    <td class="icon"><img src="/static/{{ worker.state }}.png" alt="{{ worker.state }}" title="{{ worker.state }}"></td>
+    <td class="icon"><img src="{{ url_for('static', filename=worker.state+'.png') }}" alt="{{ worker.state }}" title="{{ worker.state }}"></td>
 
-    <td class="where"><a href="/workers/{{ worker.w }}">{{ worker.host }}:{{ worker.pid }}</a></td>
+    <td class="where"><a href="{{ url_for('.worker', worker_id=worker.w) }}">{{ worker.host }}:{{ worker.pid }}</a></td>
     <td class="queues">
         {% for queue in worker.queues %}
         <a class="queue-tag" href="/queues/{{ queue.q }}">{{ queue.q }}</a>&nbsp;
@@ -23,7 +23,7 @@
     <td class="process">
       {% if worker.data %}
         <code>{{ worker.code }}</code>
-        <small><a class="queue time" href="/working/{{ worker.w }}">{{ worker.runat }}</a></small>
+        <small><a class="queue time" href="{{ url_for('.worker', worker_id=worker.w) }}">{{ worker.runat }}</a></small>
       {% else %}
               <span class="waiting">Waiting for a job...</span>
       {% endif %}
