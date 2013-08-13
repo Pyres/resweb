@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Worker {{ data.worker }}</h1>
+  <table class="workers">
+    <tr>
+      <th>&nbsp;</th>
+      <th>Host</th>
+      <th>Pid</th>
+      <th>Started</th>
+      <th>Queues</th>
+      <th>Processed</th>
+      <th>Failed</th>
+      <th>Processing</th>
+    </tr>
+    <tr>
+      <td class="icon"><img src="{{ url_for('static', filename=data.state+'.png') }}" alt="{{ data.state }}" title="{{ data.state }}"></td>
+      <td>{{ data.host }}</td>
+      <td>{{data.pid }}</td>
+      <td><span class="time">{{ data.started_at }}</a></td>
+      <td class="queues">
+      {% for queue in data.queues %}
+      <a class="queue-tag" href="/queues/{{ queue.q }}">{{ queue.q }}</a>&nbsp;
+      {% endfor %}
+      </td>
+      <td>{{ data.processed }}</td>
+      <td>{{ data.failed }}</td>
+      <td class="process">
+          {% if data.data %}
+              <code>{{ data.code }}</code>
+              <small><a class="queue time" href="{{ url_for('.worker', worker_id=data.worker) }}">{{ data.runat }}</a></small>
+	      {% else %}
+              <span class="waiting">Waiting for a job...</span>
+	      {% endif %}
+      </td>
+    </tr>
+  </table>
+{% endblock %}

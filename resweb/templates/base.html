@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>pyres.</title>
+<link href="{{ url_for('static', filename='reset.css') }}" media="screen" rel="stylesheet" type="text/css">
+  <link href="{{ url_for('static', filename='style.css') }}" media="screen" rel="stylesheet" type="text/css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.0/jquery.min.js" type="text/javascript"></script>
+</head>
+<body>
+  <div class="header">
+    <ul class="nav">
+        <li><a href="{{ url_for('overview') }}">Overview</a></li>
+        <li><a href="{{ url_for('working') }}">Working</a></li>
+        <li><a href="{{ url_for('failed') }}">Failed</a></li>
+        <li><a href="{{ url_for('queues') }}">Queues</a></li>
+        <li><a href="{{ url_for('workers') }}">Workers</a></li>
+        <li><a href="{{ url_for('delayed') }}">Delayed</a></li>
+        <li><a href="{{ url_for('stats', key='resque')}}">Stats</a></li>
+    </ul>
+  </div>
+  <ul class="subnav">
+  {% for item in data.sub_nav %}
+        <li ><a href="/{{ item.section }}/{{ item.subtab }}/"><span>{{ item.subtab }}</span></a></li>
+  {% endfor %}
+  </ul>
+<div id="main">
+{% block content %}
+{% endblock %}
+</div>
+
+<div id="footer">
+{% block footer %}
+  <p>Powered by <a href="http://github.com/binarydud/pyres">Pyres</a> version {{ data.version }}</p>
+  <p>Running on <a href="http://github.com/Pyres/resweb">Resweb</a> version {{ data.resweb_version }}</p>
+  <p>Connected to Redis on {{ data.address }}</p>
+{% endblock %}
+</div>
+
+</body>
+</html>

@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1 class="wi">{{ data.size }} Workers</h1>
+<p class="intro">The workers listed below are all registered as active on your system.</p>
+<table class="workers">
+  <tr>
+    <th>&nbsp;</th>
+    <th>Where</th>
+    <th>Queues</th>
+    <th>Processing</th>
+  </tr>
+{% if data.workers %}
+{% for worker in data.workers %}
+  <tr class="{{ worker.state }}">
+    <td class="icon"><img src="{{ url_for('static', filename=worker.state+'.png') }}" alt="{{ worker.state }}" title="{{ worker.state }}"></td>
+
+    <td class="where"><a href="{{ url_for('.worker', worker_id=worker.w) }}">{{ worker.host }}:{{ worker.pid }}</a></td>
+    <td class="queues">
+        {% for queue in worker.queues %}
+        <a class="queue-tag" href="/queues/{{ queue.q }}">{{ queue.q }}</a>&nbsp;
+        {% endfor %}
+    </td>
+    <td class="process">
+      {% if worker.data %}
+        <code>{{ worker.code }}</code>
+        <small><a class="queue time" href="{{ url_for('.worker', worker_id=worker.w) }}">{{ worker.runat }}</a></small>
+      {% else %}
+              <span class="waiting">Waiting for a job...</span>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+  {% else %}
+  <tr>
+    <td colspan="4" class="no-data">There are no registered workers</td>
+  </tr>
+{% endif %}
+</table>
+{% endblock %}

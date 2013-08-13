@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% import 'macros.html' as macros %}
+{% block content %}
+{{ macros.queues(data) }}
+{{ macros.workers(data) }}
+{% endblock %}

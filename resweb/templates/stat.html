@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Key "{{ data.key }}" is a {{ data.key_type }}</h1>
+<h2>size: {{ data.size }}</h2>
+<table>
+    {% for item in data.stat_items %}
+    <tr>
+      <td>
+        {{ item.row }}
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+{% endblock %}

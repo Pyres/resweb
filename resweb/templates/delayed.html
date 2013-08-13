@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Delayed Jobs</h1>
+
+<p class="intro">
+  This list below contains the timestamps for scheduled delayed jobs.
+</p>
+
+<p class="sub">
+  Showing {{ data.start }} to {{ data.end }} of <b>{{ data.size }}</b> timestamps
+</p>
+
+<table>
+  <tr>
+    <th>Timestamp</th>
+    <th>Job count</th>
+  </tr>
+  {% for job in data.jobs %}
+    <tr>
+      <td><a href="{{ url_for('.delayed', timestamp=job.timestamp) }}/">{{ job.formated_time }}</a></td>
+      <td>{{ job.size }}</td>
+    </tr>
+  {% endfor %}
+</table>
+
+{% for page in data.pagination %}
+  <li>
+      {% if not page.current%}<a href="{{ page.link }}">{% endif %}{{ page.link_name }}{% if not page.current %}</a>{% endif %}
+  </li>
+{% endfor %}
+{% endblock %}

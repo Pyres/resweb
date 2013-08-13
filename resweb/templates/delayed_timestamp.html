@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Delayed jobs scheduled for {{ data.formated_timestamp }}</h1>
+<p class="sub">Showing {{ data.start }} to {{ data.end }} of <b>{{ data.size }}</b> jobs</p>
+
+<table class="jobs">
+  <tr>
+    <th>Class</th>
+    <th>Args</th>
+  </tr>
+  {% if data.jobs %}
+  {% for job in data.jobs %}
+    <tr>
+      <td class='class'>{{ job.class }}</td>
+      <td class='args'>{{ job.args }}</td>
+    </tr>
+  {% endfor %}
+  {% else %}
+    <tr>
+      <td class='no-data' colspan='2'>There are no pending jobs scheduled for this time.</td>
+    </tr>
+  {% endif %}
+</table>
+{% for page in data.pagination %}
+  <li>
+      {% if not page.current%}<a href="{{ page.link }}">{% endif %}{{ page.link_name }}{% if not page.current %}</a>{% endif %}
+  </li>
+{% endfor %}
+{% endblock %}

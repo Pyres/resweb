@@ -15,8 +15,7 @@ setup(
     package_data={'resweb': ['templates/*.mustache','static/*']},
     install_requires=[
         'pyres>=1.3',
-        'flask',
-        'pystache'
+        'flask'
     ],
     entry_points = """\
     [console_scripts]

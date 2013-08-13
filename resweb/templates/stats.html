@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block content %}
+{% if data.key == 'keys' %}
+<h1>{{ data.title}}</h1>
+<p class="sub">(All keys are actually prefixed with "resque:")</p>
+    <table class='stats'>
+    <tr>
+        <th>key</th>
+        <th>type</th>
+        <th>size</th>
+    </tr>
+    {% for stat in data.stats %}
+    <tr>
+        <th>
+        <a href="{{ url_for('.stat', stat_id=stat.key) }}">{{ stat.key }}</a>
+        </th>
+        <td>{{ stat.type }}</td>
+        <td>{{ stat.size }}</td>
+    </tr>
+  {% endfor %}
+  </table>
+{% else %}
+<h1>{{ data.title }}</h1>
+  <table class="stats">
+  {% for stat in data.stats %}
+    <tr>
+      <th>
+        {{ stat.key }}
+      </th>
+      <td>
+        {{ stat.value }}
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+{% endif %}
+{% endblock %}
